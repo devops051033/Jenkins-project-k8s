@@ -5,7 +5,6 @@ pipeline {
         IMAGE_NAME = 'samdocker33/kk-flask-app'
         KUBECONFIG = credentials('kubeconfig-cred-id')
         AWS_CREDENTIALS = credentials('tuhin-aws-access-key-secret')
-        
     }
 
     options { skipDefaultCheckout() }
@@ -13,7 +12,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-
                     git url: 'https://github.com/devops051033/jenkins-project.git', branch: 'appCodeDocarize'
                     sh "ls -ltr"
                     echo "The current commit hash is: ${env.GIT_COMMIT}"
@@ -32,10 +30,11 @@ pipeline {
                 }
             }
         }
-    }
+
     
     
-    stages {
+    
+
         stage('Setup') {
             steps {
                 sh "python3 -m venv venv" // Create virtual environment
@@ -45,7 +44,7 @@ pipeline {
                 sh 'ls -la $KUBECONFIG'
             }
         }
-        
+
         stage('Test') {
             steps {
                 sh "pytest"
@@ -62,8 +61,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image')
-        {
+        stage('Build Docker Image'){
             steps
             {
                 sh 'docker build -t ${IMAGE_TAG} .'
@@ -73,8 +71,7 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image')
-        {
+        stage('Push Docker Image'){
             steps
             {
                 sh 'docker push ${IMAGE_TAG}'
@@ -82,8 +79,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Staging')
-        {
+        stage('Deploy to Staging'){
             steps {
                 sh 'kubectl config use-context mamun@stg-k.us-east-1.eksctl.io'
                 sh 'kubectl config current-context'
@@ -91,8 +87,7 @@ pipeline {
             }
         }
 
-        stage('Acceptance Test')
-        {
+        stage('Acceptance Test'){
             steps {
 
                 script {
@@ -105,7 +100,5 @@ pipeline {
             }
         }
             
-
-        
     }
 }
