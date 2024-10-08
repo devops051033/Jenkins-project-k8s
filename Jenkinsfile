@@ -39,6 +39,7 @@ pipeline {
             steps {
                 sh "python3 -m venv venv" // Create virtual environment
                 sh "bash -c 'source venv/bin/activate && pip install -r requirements.txt'" // Activate and install
+                sh "pytest"
                 sh 'ls -la $KUBECONFIG'
                 sh 'chmod 644 $KUBECONFIG'
                 sh 'ls -la $KUBECONFIG'
