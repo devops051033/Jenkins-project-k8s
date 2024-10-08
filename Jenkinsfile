@@ -2,24 +2,50 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'sanjeevkt720/jenkins-flask-app'
-        IMAGE_TAG = "${IMAGE_NAME}:${env.GIT_COMMIT}"
-        KUBECONFIG = credentials('kubeconfig-credentials-id')
-        AWS_ACCESS_KEY_ID = credentials('aws-access-key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+        IMAGE_NAME = 'samdocker33/kk-flask-app'
+        KUBECONFIG = credentials('kubeconfig-cred-id')
+        AWS_CREDENTIALS = credentials('tuhin-aws-access-key-secret')
         
     }
 
+    options { skipDefaultCheckout() }
+
+    stages {
+        stage('Checkout') {
+            steps {
+
+                    git url: 'https://github.com/devops051033/jenkins-project.git', branch: 'appCodeDocarize'
+                    sh "ls -ltr"
+                    echo "The current commit hash is: ${env.GIT_COMMIT}"
+
+                    // Manually retrieve the commit hash
+                script {
+                    def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                    echo "The current commit hash is: ${gitCommit}"
+
+                    // Set IMAGE_TAG dynamically based on the commit hash
+                    def imageTag = "${IMAGE_NAME}:${gitCommit}"
+                    echo "The image tag is: ${imageTag}"
+
+                    // Use the imageTag variable in subsequent stages
+                    env.IMAGE_TAG = imageTag
+                }
+            }
+        }
+    }
+    
     
     stages {
         stage('Setup') {
             steps {
+                sh "python3 -m venv venv" // Create virtual environment
+                sh "bash -c 'source venv/bin/activate && pip install -r requirements.txt'" // Activate and install
                 sh 'ls -la $KUBECONFIG'
                 sh 'chmod 644 $KUBECONFIG'
                 sh 'ls -la $KUBECONFIG'
-                sh "pip install -r requirements.txt"
             }
         }
+        
         stage('Test') {
             steps {
                 sh "pytest"
@@ -28,8 +54,10 @@ pipeline {
 
         stage('Login to docker hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                sh 'echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin'}
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred',
+                usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin'
+                    }
                 echo 'Login successfully'
             }
         }
@@ -57,7 +85,7 @@ pipeline {
         stage('Deploy to Staging')
         {
             steps {
-                sh 'kubectl config use-context user@staging.us-east-1.eksctl.io'
+                sh 'kubectl config use-context mamun@stg-k.us-east-1.eksctl.io'
                 sh 'kubectl config current-context'
                 sh "kubectl set image deployment/flask-app flask-app=${IMAGE_TAG}"
             }
@@ -76,14 +104,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Prod')
-        {
-            steps {
-                sh 'kubectl config use-context user@prod.us-east-1.eksctl.io'
-                sh 'kubectl config current-context'
-                sh "kubectl set image deployment/flask-app flask-app=${IMAGE_TAG}"
-            }
-        }       
+            
 
         
     }
