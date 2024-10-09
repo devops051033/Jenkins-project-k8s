@@ -85,9 +85,19 @@ pipeline {
 
         stage('Deploy to Staging'){
             steps {
+                // Set the context for the kubectl command
                 sh 'kubectl config use-context mamun@stgc.us-east-1.eksctl.io'
+        
+                // Confirm the current context
                 sh 'kubectl config current-context'
-                sh "kubectl set image deployment/flask-app flask-app=${IMAGE_TAG}"
+        
+                // Install gettext for envsubst command (if not already installed)
+                sh 'apt-get update && apt-get install -y gettext'
+        
+                // Substitute the IMAGE_TAG variable and deploy the updated YAML
+                sh '''
+                envsubst < flask-app-deployment.yaml | kubectl apply -f -
+                '''
             }
         }
 
