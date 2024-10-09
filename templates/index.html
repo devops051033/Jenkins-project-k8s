@@ -6,19 +6,24 @@
     <title>Todo App</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #e9ecef;
+            font-family: 'Arial Black', Arial, sans-serif; /* Bolder font */
+            background-color: #f0f8f0; /* Light green background */
             margin: 0;
             padding: 20px;
-            color: #495057;
+            color: #2f4f4f; /* Dark slate gray color for text */
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         h1 {
-            color: #007bff;
+            color: #228B22; /* Forest green */
             margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #006400; /* Dark green */
+            margin: 15px 0;
         }
 
         form {
@@ -31,9 +36,10 @@
         input[type="text"],
         input[type="submit"] {
             border-radius: 4px;
-            border: 1px solid #ced4da;
-            padding: 10px;
+            border: 2px solid #4CAF50; /* Green border */
+            padding: 12px; /* Increased padding for a bolder appearance */
             margin: 0 5px;
+            font-size: 16px; /* Increased font size */
         }
 
         input[type="text"] {
@@ -42,19 +48,20 @@
         }
 
         input[type="text"]:focus {
-            border: 1px solid #007bff;
+            border: 2px solid #2E8B57; /* Darker green on focus */
             outline: none;
         }
 
         input[type="submit"] {
-            background-color: #007bff;
+            background-color: #4CAF50; /* Green background */
             color: white;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-weight: bold; /* Bold text */
         }
 
         input[type="submit"]:hover {
-            background-color: #0056b3;
+            background-color: #388E3C; /* Darker green on hover */
         }
 
         ul {
@@ -67,7 +74,7 @@
             background-color: #fff;
             margin-bottom: 10px;
             padding: 15px;
-            border: 1px solid #ced4da;
+            border: 2px solid #4CAF50; /* Green border */
             border-radius: 4px;
             display: flex;
             justify-content: space-between;
@@ -77,26 +84,29 @@
 
         li:hover {
             transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
         }
 
         .task-text {
             margin: 0;
             flex-grow: 1;
             padding-right: 10px;
+            font-weight: bold; /* Bold task text */
         }
 
         .delete-button {
-            background-color: #dc3545;
+            background-color: #DC143C; /* Crimson for delete button */
             border: none;
             border-radius: 4px;
             color: white;
-            padding: 8px 12px;
+            padding: 10px 15px;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-weight: bold; /* Bold text for delete button */
         }
 
         .delete-button:hover {
-            background-color: #c82333;
+            background-color: #B22222; /* Darker red on hover */
         }
     </style>
 </head>
