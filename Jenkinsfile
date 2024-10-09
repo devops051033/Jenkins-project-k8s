@@ -83,7 +83,7 @@ pipeline {
 
         stage('Deploy to Staging'){
             steps {
-                sh 'kubectl config use-context mamun@stg-k.us-east-1.eksctl.io'
+                sh 'kubectl config use-context mamun@stgc.us-east-1.eksctl.io'
                 sh 'kubectl config current-context'
                 sh "kubectl set image deployment/flask-app flask-app=${IMAGE_TAG}"
             }
