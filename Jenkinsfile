@@ -40,6 +40,8 @@ pipeline {
                 ls -la $KUBECONFIG
                 chmod 644 $KUBECONFIG
                 ls -la $KUBECONFIG
+                echo "Displaying the content of KUBECONFIG:"
+                cat $KUBECONFIG  
                 '''
             }
         }
@@ -83,6 +85,8 @@ pipeline {
 
         stage('Deploy to Staging'){
             steps {
+                echo "Displaying the content of KUBECONFIG:"
+                cat $KUBECONFIG  
                 sh 'kubectl config use-context mamun@stgc.us-east-1.eksctl.io'
                 sh 'kubectl config current-context'
                 sh "kubectl set image deployment/flask-app flask-app=${IMAGE_TAG}"
