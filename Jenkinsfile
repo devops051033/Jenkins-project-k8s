@@ -92,7 +92,7 @@ pipeline {
                 sh 'kubectl config current-context'
         
                 // Install gettext for envsubst command (if not already installed)
-                sh 'apt-get update && apt-get install -y gettext'
+                //sh 'sudo apt-get update && apt-get install -y gettext'
         
                 // Substitute the IMAGE_TAG variable and deploy the updated YAML
                 sh '''
