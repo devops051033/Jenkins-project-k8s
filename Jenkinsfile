@@ -85,8 +85,6 @@ pipeline {
 
         stage('Deploy to Staging'){
             steps {
-                echo "Displaying the content of KUBECONFIG:"
-                cat $KUBECONFIG  
                 sh 'kubectl config use-context mamun@stgc.us-east-1.eksctl.io'
                 sh 'kubectl config current-context'
                 sh "kubectl set image deployment/flask-app flask-app=${IMAGE_TAG}"
@@ -95,9 +93,7 @@ pipeline {
 
         stage('Acceptance Test'){
             steps {
-
                 script {
-
                     def service = sh(script: "kubectl get svc flask-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}:{.spec.ports[0].port}'", returnStdout: true).trim()
                     echo "${service}"
 
