@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                    git url: 'https://github.com/devops051033/jenkins-project.git', branch: 'appCodeDocarize'
+                    git url: 'https://github.com/devops051033/Jenkins-project-k8s.git', branch: 'main'
                     sh "ls -ltr"
                     echo "The current commit hash is: ${env.GIT_COMMIT}"
 
