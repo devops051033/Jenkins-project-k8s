@@ -1,83 +1,127 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo App</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 20px;
-        color: #333;
-      }
-      h1 {
-        color: #333;
-      }
-      form {
-        margin-bottom: 20px;
-      }
-      input[type="text"],
-      textarea {
-        padding: 10px;
-        margin: 10px 0;
-        width: 300px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-      input[type="submit"] {
-        background-color: #4caf50;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      input[type="submit"]:hover {
-        background-color: #45a049;
-      }
-      ul {
-        list-style-type: none;
-        padding: 0;
-      }
-      li {
-        background-color: #fff;
-        margin-bottom: 8px;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-      .task-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .task-text {
-        margin: 0;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e9ecef;
+            margin: 0;
+            padding: 20px;
+            color: #495057;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        input[type="text"],
+        input[type="submit"] {
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            padding: 10px;
+            margin: 0 5px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border: 1px solid #007bff;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        li:hover {
+            transform: scale(1.02);
+        }
+
+        .task-text {
+            margin: 0;
+            flex-grow: 1;
+            padding-right: 10px;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <h1>Todo App: v2</h1>
 
     <!-- Add Task Form -->
     <form method="post">
-      <input type="text" name="task_content" placeholder="Enter a new task" />
-      <input type="submit" name="add_task" value="Add Task" />
+        <input type="text" name="task_content" placeholder="Enter a new task" required />
+        <input type="submit" name="add_task" value="Add Task" />
     </form>
 
     <!-- Display Tasks -->
-    <h2>Tasks: sdfasdf</h2>
+    <h2>Tasks:</h2>
     <ul>
-      {% for id, task in tasks.items() %}
-      <li class="task-item">
-        <p class="task-text">{{ task }}</p>
-        <!-- Delete Button for Each Task -->
-        <form method="post" style="display: inline">
-          <input type="hidden" name="task_id_to_delete" value="{{ id }}" />
-          <input type="submit" name="delete_task" value="Delete" />
-        </form>
-      </li>
-      {% endfor %}
+        {% for id, task in tasks.items() %}
+        <li>
+            <p class="task-text">{{ task }}</p>
+            <!-- Delete Button for Each Task -->
+            <form method="post" style="display: inline">
+                <input type="hidden" name="task_id_to_delete" value="{{ id }}" />
+                <input type="submit" class="delete-button" name="delete_task" value="Delete" />
+            </form>
+        </li>
+        {% endfor %}
     </ul>
-  </body>
+</body>
 </html>
