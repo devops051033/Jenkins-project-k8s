@@ -31,20 +31,20 @@ pipeline {
             }
         }
 
-    
-    
-    
-
-        stage('Setup') {
+        stage('Setup') {    
             steps {
-                sh "python3 -m venv venv" // Create virtual environment
-                sh "bash -c 'source venv/bin/activate && pip install -r requirements.txt'" // Activate and install
-                sh "pytest"
-                sh 'ls -la $KUBECONFIG'
-                sh 'chmod 644 $KUBECONFIG'
-                sh 'ls -la $KUBECONFIG'
+                sh '''#!/bin/bash
+                python3 -m venv venv  # Create virtual environment
+                source venv/bin/activate
+                pip install -r requirements.txt  # Install dependencies
+                ls -la $KUBECONFIG
+                chmod 644 $KUBECONFIG
+                ls -la $KUBECONFIG
+                '''
             }
         }
+    
+
 
         stage('Test') {
             steps {
