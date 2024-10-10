@@ -88,7 +88,7 @@ pipeline {
 
                     // Deploy to the Kubernetes cluster using the correct context
                     sh '''
-                    kubectl --context ${kubeContext} apply -f deployment.yaml
+                    kubectl  apply -f deployment.yaml
                     '''
                 }
             }
