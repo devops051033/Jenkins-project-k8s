@@ -14,29 +14,25 @@ pipeline {
             steps {
                     git url: 'https://github.com/devops051033/Jenkins-project-k8s.git', branch: 'main'
                     sh "ls -ltr"
-                    echo "The current commit hash is: ${env.GIT_COMMIT}"
-
-                    // Manually retrieve the commit hash
+                // Manually retrieve the commit hash
                 script {
                     def gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
                     echo "The current commit hash is: ${gitCommit}"
-
                     // Set IMAGE_TAG dynamically based on the commit hash
                     def imageTag = "${IMAGE_NAME}:${gitCommit}"
                     echo "The image tag is: ${imageTag}"
-
                     // Use the imageTag variable in subsequent stages
                     env.IMAGE_TAG = imageTag
                 }
             }
         }
 
-        stage('Setup') {    
+        stage('Setup env in jenkins container') {    
             steps {
                 sh '''#!/bin/bash
-                python3 -m venv venv  # Create virtual environment
+                python3 -m venv venv 
                 source venv/bin/activate
-                pip install -r requirements.txt  # Install dependencies
+                pip install -r requirements.txt
                 ls -la $KUBECONFIG
                 chmod 644 $KUBECONFIG
                 ls -la $KUBECONFIG
@@ -45,16 +41,12 @@ pipeline {
                 '''
             }
         }
-    
-
 
         stage('Test') {
             steps {
-                sh "bash -c 'source venv/bin/activate && pytest'" // Activate and run tests
-                sh "whoami"
+                sh "bash -c 'source venv/bin/activate && pytest'" 
             }
         }
-
         stage('Login to docker hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-cred',
@@ -85,19 +77,20 @@ pipeline {
 
         stage('Deploy to Staging'){
             steps {
-                // Set the context for the kubectl command
-                sh 'kubectl config use-context mamun@stgc.us-east-1.eksctl.io'
-        
-                // Confirm the current context
-                sh 'kubectl config current-context'
-        
-                // Install gettext for envsubst command (if not already installed)
-                //sh 'sudo apt-get update && apt-get install -y gettext'
-        
-                // Substitute the IMAGE_TAG variable and deploy the updated YAML
-                sh '''
-                envsubst < flask-app-deployment.yaml | kubectl apply -f -
-                '''
+                script {
+                    // Fetch the current Kubernetes context from the uploaded KUBECONFIG
+                    def kubeContext = sh(
+                        script: 'kubectl config current-context',
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Using Kubernetes context: ${kubeContext}"
+
+                    // Deploy to the Kubernetes cluster using the correct context
+                    sh '''
+                    kubectl --context ${kubeContext} apply -f deployment.yaml
+                    '''
+                }
             }
         }
 
