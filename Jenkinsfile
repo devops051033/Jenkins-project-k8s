@@ -86,10 +86,12 @@ pipeline {
 
                     echo "Using Kubernetes context: ${kubeContext}"
 
-                    // Deploy to the Kubernetes cluster using the correct context
-                    sh '''
-                    kubectl  apply -f flask-app-deployment.yaml
-                    '''
+                // Install gettext for envsubst command (if not already installed)
+                //sh 'sudo apt-get update && apt-get install -y gettext'
+                // Substitute the IMAGE_TAG variable and deploy the updated YAML
+                sh '''
+                envsubst < flask-app-deployment.yaml | kubectl apply -f -
+                '''
                 }
             }
         }
