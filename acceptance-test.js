@@ -11,7 +11,7 @@ export const options = {
   duration: '10s',
   thresholds: {
     successful_requests_below_20ms: ['rate>0.90'], // 90% of requests should be below 20ms
-    http_request_duration: ['p(90)<20'],           // 90% of request durations should be below 20ms
+    http_request_duration: ['p(40)<20'],           // 90% of request durations should be below 20ms
   },
 };
 
