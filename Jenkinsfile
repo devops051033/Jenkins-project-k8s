@@ -88,7 +88,7 @@ pipeline {
 
                     // Deploy to the Kubernetes cluster using the correct context
                     sh '''
-                    kubectl  apply -f deployment.yaml
+                    kubectl  apply -f flask-app-deployment.yaml
                     '''
                 }
             }
